@@ -1,0 +1,32 @@
+name: Build PAD ChatBot EXE
+
+on:
+  workflow_dispatch:  # você dispara manualmente pela aba Actions
+
+jobs:
+  build-windows-exe:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Instalar PyInstaller
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyinstaller
+
+      - name: Gerar executável com PyInstaller
+        run: |
+          pyinstaller --onefile --name ChatBot_PAD ChatBot_PAD.py
+
+      - name: Publicar executável como artefato
+        uses: actions/upload-artifact@v4
+        with:
+          name: ChatBot_PAD-exe
+          path: dist/ChatBot_PAD.exe
